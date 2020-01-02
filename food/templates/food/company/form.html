@@ -1,0 +1,309 @@
+{% extends 'admin/index.html' %}
+
+{% load static %}
+
+{% block extrahead %}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+    integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+    crossorigin="anonymous"></script>
+
+{% endblock %}
+
+
+{% block content %}
+
+<section class="container">
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label for="logo">Logo</label>
+            {% if  object and object.logo%}
+            <img class="img-thumbnail" src="{% static "food/uploads/" %}{{object.logo}}" width="50">
+            {% endif %}
+            <input type="file" class="form-control-file" name="logo" id="logo" accept="image/*">
+        </div>
+
+        <div class="row form-group">
+            <div class="col-md-12">
+                <label for="name">Name</label>
+                <input type="text" required class="form-control form-control-sm" name="name" id="name"
+                    value="{{object.name}}">
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="col-md-6">
+                <label for="email">Email</label>
+                <input type="text" required class="form-control form-control-sm" name="email" id="email"
+                    value="{{object.email}}">
+            </div>
+            <div class="col-md-6">
+                <label for="phone">Phone</label>
+                <input type="text" required class="form-control form-control-sm" name="phone" id="phone"
+                    value="{{object.phone}}">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="localizacao">Location</label>
+            <input type="text" name="localizacao" id="localizacao" class="form-control form-control-sm"
+                placeholder="Localizacao..." value="{{object.localizacao}}">
+
+            <input type="hidden" name="lat" id="localizacao_lat" value="{{object.lat}}">
+            <input type="hidden" name="lng" id="localizacao_lng" value="{{object.lng}}">
+
+            <div id="map" style="width: 100%; height: 200px; display: none;"></div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-8">
+                <label for="category_id">Category</label>
+                <select id="category_id" name="category_id" class="form-control form-control-sm" required>
+                    {% for categorie in categories %}
+                    <option {% if object and object.category_id and object.category_id.id == categorie.id %} selected
+                        {% endif %} value="{{categorie.id}}">{{categorie.name}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label for="desconto">Desconto (%)</label>
+                <input type="number" required class="form-control form-control-sm" name="desconto" id="desconto"
+                    value="{{object.desconto}}">
+            </div>
+        </div>
+        <br>
+
+        <div class="card">
+            <div class="card-header">Slides</div>
+            <div class="card-body">
+                <div class="row">
+                    {% if  object and object.photo1%}
+                    <img class="img-thumbnail" src="{% static "food/uploads/" %}{{object.photo1}}" width="50">
+                    {% endif %}
+                    <input id="photo1" name="photo1" type="file" accept="image/*" />
+                </div>
+                <div class="row">
+                    {% if  object and object.photo2%}
+                    <img class="img-thumbnail" src="{% static "food/uploads/" %}{{object.photo2}}" width="50">
+                    {% endif %}
+                    <input id="photo2" name="photo2" type="file" accept="image/*" />
+                </div>
+                <div class="row">
+                    {% if  object and object.photo3%}
+                    <img class="img-thumbnail" src="{% static "food/uploads/" %}{{object.photo3}}" width="50">
+                    {% endif %}
+                    <input id="lphoto3ogo" name="photo3" type="file" accept="image/*" />
+                </div>
+                <div class="row">
+                    {% if  object and object.photo4%}
+                    <img class="img-thumbnail" src="{% static "food/uploads/" %}{{object.photo4}}" width="50">
+                    {% endif %}
+                    <input id="photo4" name="photo4" type="file" accept="image/*" />
+                </div>
+                <div class="row">
+                    {% if  object and object.photo5%}
+                    <img class="img-thumbnail" src="{% static "food/uploads/" %}{{object.photo5}}" width="50">
+                    {% endif %}
+                    <input id="photo5" name="photo5" type="file" accept="image/*" />
+                </div>
+            </div>
+        </div>
+
+        <br>
+
+        <div class="card">
+            <div class="card-header">Semana</div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <label for="name">Segunda</label>
+                    </div>
+                    <div class="col-md-1">
+                        <input type="checkbox" name="mon" id="mon" class="form-check-input" {% if object.mon %} checked
+                            {% endif %}>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="time" name="mon_open" id="mon_open" class="form-control form-control-sm"
+                            value="{{object.mon_open}}">
+                    </div>
+                    <div class="col-md-3">
+                        <input type="time" name="mon_close" id="mon_close" class="form-control form-control-sm"
+                            value="{{object.mon_close}}">
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-md-3">
+                        <label for="name">Terça</label>
+                    </div>
+                    <div class="col-md-1">
+                        <input type="checkbox" name="tue" id="tue" class="form-check-input" {% if field.tue %} checked
+                            {% endif %}>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="time" name="tue_open" id="tue_open" class="form-control form-control-sm"
+                            value="{{object.tue_open}}">
+                    </div>
+                    <div class="col-md-3">
+                        <input type="time" name="tue_close" id="tue_close" class="form-control form-control-sm"
+                            value="{{object.tue_close}}">
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-md-3">
+                        <label for="name">Quarta</label>
+                    </div>
+                    <div class="col-md-1">
+                        <input type="checkbox" name="wed" id="wed" class="form-check-input" {% if field.wed %} checked
+                            {% endif %}>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="time" name="wed_open" id="wed_open" class="form-control form-control-sm"
+                            value="{{object.wed_open}}">
+                    </div>
+                    <div class="col-md-3">
+                        <input type="time" name="wed_close" id="wed_close" class="form-control form-control-sm"
+                            value="{{object.wed_close}}">
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-md-3">
+                        <label for="name">Quinta</label>
+                    </div>
+                    <div class="col-md-1">
+                        <input type="checkbox" name="thu" id="thu" class="form-check-input" {% if field.thu %} checked
+                            {% endif %}>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="time" name="thu_open" id="thu_open" class="form-control form-control-sm"
+                            value="{{object.thu_open}}">
+                    </div>
+                    <div class="col-md-3">
+                        <input type="time" name="thu_close" id="thu_close" class="form-control form-control-sm"
+                            value="{{object.thu_close}}">
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-md-3">
+                        <label for="name">Sexta</label>
+                    </div>
+                    <div class="col-md-1">
+                        <input type="checkbox" name="fri" id="fri" class="form-check-input" {% if field.fri %} checked
+                            {% endif %}>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="time" name="fri_open" id="fri_open" class="form-control form-control-sm"
+                            value="{{object.fri_open}}">
+                    </div>
+                    <div class="col-md-3">
+                        <input type="time" name="fri_close" id="fri_close" class="form-control form-control-sm"
+                            value="{{object.fri_close}}">
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-md-3">
+                        <label for="name">Sabado</label>
+                    </div>
+                    <div class="col-md-1">
+                        <input type="checkbox" name="sat" id="sat" class="form-check-input" {% if field.sat %} checked
+                            {% endif %}>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="time" name="sat_open" id="sat_open" class="form-control form-control-sm"
+                            value="{{object.sat_open}}">
+                    </div>
+                    <div class="col-md-3">
+                        <input type="time" name="sat_close" id="sat_close" class="form-control form-control-sm"
+                            value="{{object.sat_close}}">
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-md-3">
+                        <label for="name">Domingo</label>
+                    </div>
+                    <div class="col-md-1">
+                        <input type="checkbox" name="sun" id="sun" class="form-check-input" {% if field.sun %} checked
+                            {% endif %}>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="time" name="sun_open" id="sun_open" class="form-control form-control-sm"
+                            value="{{object.sun_open}}">
+                    </div>
+                    <div class="col-md-3">
+                        <input type="time" name="sun_close" id="sun_close" class="form-control form-control-sm"
+                            value="{{object.sun_close}}">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <hr>
+        <input type="submit" value="Submit" />
+    </form>
+</section>
+
+
+
+
+<script type="text/javascript"
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD7cui_M1g63yhym0pdVF9wqj84-fN1yJs&libraries=places"></script>
+<script>
+
+    google.maps.event.addDomListener(window, 'load', initialize);
+
+    var map;
+    function montarMapa(lat, lng) {
+        var mapOptions = {
+            zoom: 8,
+            center: { lat: lat, lng: lng }
+        };
+        map = new google.maps.Map(document.getElementById('map'), mapOptions);
+
+        var marker = new google.maps.Marker({
+            position: { lat: lat, lng: lng },
+            map: map
+        });
+
+        var infowindow = new google.maps.InfoWindow({
+            content: '<p>Marker Location:' + marker.getPosition() + '</p>'
+        });
+
+        google.maps.event.addListener(marker, 'click', function () {
+            infowindow.open(map, marker);
+        });
+
+        $("#map").show();
+    }
+
+    function initialize() {
+        var input = document.getElementById('localizacao');
+        var autocomplete = new google.maps.places.Autocomplete(input);
+        autocomplete.addListener('place_changed', function () {
+            var place = autocomplete.getPlace();
+            var lat = place.geometry['location'].lat();
+            var lng = place.geometry['location'].lng();
+            $('#localizacao_lat').val(lat);
+            $('#localizacao_lng').val(lng);
+            montarMapa(lat, lng);
+        });
+    }
+
+
+    {% if  object and object.lat and object.lng %}
+    montarMapa({{ object.lat }}, {{ object.lng }});
+    {% endif %}
+</script>
+
+{% endblock %}
