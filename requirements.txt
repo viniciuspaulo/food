@@ -8,8 +8,10 @@ chardet==3.0.4
 constantly==15.1.0
 cryptography==2.8
 cssselect==1.1.0
+dj-database-url==0.5.0
 Django==2.1.5
 django-filter==2.2.0
+django-heroku==0.3.1
 djangorestframework==3.11.0
 EasyProcess==0.2.7
 httplib2==0.15.0
@@ -48,6 +50,7 @@ Twisted==19.7.0
 typed-ast==1.4.0
 urllib3==1.25.6
 w3lib==1.21.0
+whitenoise==5.0.1
 wrapt==1.11.2
 yelp==1.0.2
 yelpapi==2.4.0
