@@ -3,7 +3,7 @@ from django.contrib import admin
 from .category import Category
 
 class Company(models.Model):
-    logo = models.FileField(upload_to='uploads/')
+    logo = models.FileField(upload_to='uploads/',null=True, blank=True)
     name = models.CharField(max_length=255, null=False, blank=False)
     email = models.CharField(max_length=255, null=False, blank=True)
     phone = models.CharField(max_length=20, null=True, blank=True)
