@@ -9,7 +9,6 @@ class Company(models.Model):
     phone = models.CharField(max_length=20, null=True, blank=True)
 
     desconto = models.IntegerField(null=True, blank=True)
-
     mon = models.BooleanField(default=True)
     mon_open = models.CharField(max_length=20, null=True, blank=True)
     mon_close = models.CharField(max_length=20, null=True, blank=True)
